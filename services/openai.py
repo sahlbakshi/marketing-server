@@ -2,10 +2,6 @@ from io import BytesIO
 from config import openai
 from schema.chat import MultiLanguageMessages
 
-"""
-ERROR HANDLING NEEDED
-"""
-
 def tts_to_bytes(*, model: str, voice: str, text: str, instructions: str | None = None) -> bytes:
     buf = BytesIO()
     with openai.audio.speech.with_streaming_response.create(

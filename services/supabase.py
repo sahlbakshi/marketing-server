@@ -1,9 +1,5 @@
 from config import supabase
 
-"""
-ERROR HANDLING NEEDED
-"""
-
 def upload_audio_bytes(
     *,
     bucket: str,
