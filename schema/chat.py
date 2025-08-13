@@ -18,8 +18,12 @@ class Role(str, Enum):
     SENDER = "sender"
     RECEIVER = "receiver"
 
+class Character(str, Enum):
+    HUSBAND = "husband"
+    WIFE = "wife"
+
 class Message(BaseModel):
-    role: Role
+    role: Role | Character
     text: str = Field(..., min_length=1)
 
 class Voices(BaseModel):
@@ -44,3 +48,7 @@ class LineRequest(BaseModel):
 
 class LineResponse(BaseModel):
     clip: Clip
+
+class ChatMessages(BaseModel):
+    messages: List[Message]
+    hubb_index: int

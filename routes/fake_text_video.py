@@ -1,14 +1,13 @@
 from fastapi import APIRouter
 from config import AUDIO_CACHE_BUCKET
-from schema.converation import ChatRequest, LineRequest, Role
-from services.storage import upload_audio_bytes
-from services.tts import tts_to_bytes
+from schema.chat import ChatRequest, LineRequest, Role, ChatMessages
+from services.supabase import upload_audio_bytes
+from services.openai import tts_to_bytes, generate_chat
 from utils.audio import get_audio_duration_ms
+from utils.prompts import husband_wife_prompt
 import uuid
 
 """
-- AUTOMATICALLY DELETE FOLDER IN AUDIO STORAGE
-- GENERET MESSAGES
 - ERROR HANDLING
 """
 
@@ -16,13 +15,18 @@ router = APIRouter(prefix="/fake-text-video")
 
 @router.get("/messages")
 def get_messages():
-    pass
+    chat = generate_chat(
+        model='gpt-5-mini',
+        prompt=husband_wife_prompt,
+        schema=ChatMessages,
+    )
+    return chat
 
 @router.post("/tts/batch") 
 def post_tts_batch(request: ChatRequest):
     messages = request.messages
-    sender_voice = request.voices.sender_voice
-    receiver_voice = request.voices.receiver_voice
+    sender_voice = request.voices.sender
+    receiver_voice = request.voices.receiver
 
     folder = uuid.uuid4().hex
 
