@@ -23,7 +23,7 @@ class Character(str, Enum):
     WIFE = "wife"
 
 class Message(BaseModel):
-    role: Role | Character
+    role: Role
     text: str = Field(..., min_length=1)
 
 class Voices(BaseModel):
@@ -49,6 +49,14 @@ class LineRequest(BaseModel):
 class LineResponse(BaseModel):
     clip: Clip
 
-class ChatMessages(BaseModel):
-    messages: List[Message]
-    hubb_index: int
+class LanguageText(BaseModel):
+    ar: str
+    en: str
+
+class LanguageMessage(BaseModel):
+    role: Character
+    text: LanguageText
+
+class MultiLanguageMessages(BaseModel):
+    messages: List[LanguageMessage]
+    flagged_index: int

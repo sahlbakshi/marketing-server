@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from config import AUDIO_CACHE_BUCKET
-from schema.chat import ChatRequest, LineRequest, Role, ChatMessages
+from schema.chat import ChatRequest, LineRequest, Role, MultiLanguageMessages
 from services.supabase import upload_audio_bytes
 from services.openai import tts_to_bytes, generate_chat
 from utils.audio import get_audio_duration_ms
@@ -18,7 +18,7 @@ def get_messages():
     chat = generate_chat(
         model='gpt-5-mini',
         prompt=husband_wife_prompt,
-        schema=ChatMessages,
+        schema=MultiLanguageMessages,
     )
     return chat
 

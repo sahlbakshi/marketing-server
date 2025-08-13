@@ -1,6 +1,6 @@
 from io import BytesIO
 from config import openai
-from schema.chat import ChatMessages
+from schema.chat import MultiLanguageMessages
 
 """
 ERROR HANDLING NEEDED
@@ -19,7 +19,7 @@ def tts_to_bytes(*, model: str, voice: str, text: str, instructions: str | None 
     return buf.getvalue()
 
 
-def generate_chat(*, model: str, prompt: str, schema: dict) -> ChatMessages:
+def generate_chat(*, model: str, prompt: str, schema: dict) -> MultiLanguageMessages:
     response = openai.responses.parse(
         model=model,
         input=[
