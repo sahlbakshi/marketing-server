@@ -1,62 +1,37 @@
-from typing import List
-from enum import Enum
+from typing import Literal, Annotated
 from pydantic import BaseModel, Field, HttpUrl
 
-class Voice(str, Enum):
-    ALLOY = "alloy"
-    ASH = "ash"
-    BALLAD = "ballad"
-    CORAL = "coral"
-    ECHO = "echo"
-    FABLE = "fable"
-    NOVA = "nova"
-    ONYX = "onyx"
-    SAGE = "sage"
-    SHIMMER = "shimmer"
-
-class Role(str, Enum):
-    SENDER = "sender"
-    RECEIVER = "receiver"
-
-class Character(str, Enum):
-    HUSBAND = "husband"
-    WIFE = "wife"
+Voice = Literal["alloy", "ash", "ballad", "coral", "echo", "fable", "nova", "onyx", "sage", "shimmer"]
+Role = Literal["sender", "receiver"]
+Character = Literal["husband", "wife"]
+Text = Annotated[str, Field(min_length=1)]
 
 class Message(BaseModel):
     role: Role
-    text: str = Field(..., min_length=1)
-
-class Voices(BaseModel):
-    sender: Voice
-    receiver: Voice
+    text: Text
 
 class Clip(BaseModel):
     url: HttpUrl
-    duration_ms: int = Field(..., ge=0)
+    duration_ms: int
 
 class ChatRequest(BaseModel):
-    messages: List[Message]
-    voices: Voices
+    messages: list[Message]
+    voices: dict[Role, Voice]
 
 class ChatResponse(BaseModel):
-    clips: List[Clip]
-    voices: Voices
+    clips: list[Clip]
 
 class LineRequest(BaseModel):
-    text: str = Field(..., min_length=1)
+    text: Text
     voice: Voice
 
 class LineResponse(BaseModel):
     clip: Clip
 
-class LanguageText(BaseModel):
-    ar: str
-    en: str
-
-class LanguageMessage(BaseModel):
+class MultilingualMessage(BaseModel):
     role: Character
-    text: LanguageText
+    text: dict[str, Text]
 
-class MultiLanguageMessages(BaseModel):
-    messages: List[LanguageMessage]
-    flagged_index: int
+class MultilingualChatResponse(BaseModel):
+    messages: list[MultilingualMessage]
+    highlight_index: int

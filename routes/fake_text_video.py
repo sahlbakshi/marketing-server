@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from config import AUDIO_CACHE_BUCKET
-from schema.chat import ChatRequest, LineRequest, Role, MultiLanguageMessages
+from schema.chat import ChatRequest, LineRequest, ChatResponse, LineResponse, MultilingualChatResponse
 from services.supabase import upload_audio_bytes
 from services.openai import tts_to_bytes, generate_chat
 from utils.audio import get_audio_duration_ms
@@ -8,21 +8,24 @@ from utils.prompts import husband_wife_prompt
 import uuid
 
 """
-- ERROR HANDLING
+EROR HANDLING
+RESPONSE MODEL FOR ENDPOINTS
+ASK GPT IF U CAN SIMPLIFY BASE MODELS OR NOT
+SEE HOW BUFFER WORKS EXACLT FOR ADUIO
 """
 
 router = APIRouter(prefix="/fake-text-video")
 
-@router.get("/messages")
+@router.get("/messages", response_model=MultilingualChatResponse)
 def get_messages():
     chat = generate_chat(
         model='gpt-5-mini',
         prompt=husband_wife_prompt,
-        schema=MultiLanguageMessages,
+        schema=MultilingualChatResponse,
     )
     return chat
 
-@router.post("/tts/batch") 
+@router.post("/tts/batch", response_model=ChatResponse) 
 def post_tts_batch(request: ChatRequest):
     messages = request.messages
     sender_voice = request.voices.sender
@@ -32,7 +35,7 @@ def post_tts_batch(request: ChatRequest):
 
     response = []
     for index, message in enumerate(messages):
-        voice = sender_voice if message.role == Role.SENDER else receiver_voice
+        voice = sender_voice if message.role == 'sender' else receiver_voice
 
         audio_bytes = tts_to_bytes(
             model="gpt-4o-mini-tts",
@@ -49,12 +52,12 @@ def post_tts_batch(request: ChatRequest):
         )
 
         duration_ms = get_audio_duration_ms(audio_bytes)
-        response.append({"url": public_url, "duration": duration_ms})
+        response.append({"url": public_url, "duration_ms": duration_ms})
 
     return response
     
 
-@router.post("/tts/single")
+@router.post("/tts/single", response_model=LineResponse) 
 def post_tts_single(request: LineRequest):
     text = request.text
     voice = request.voice
@@ -77,4 +80,4 @@ def post_tts_single(request: LineRequest):
 
     duration_ms = get_audio_duration_ms(audio_bytes)
 
-    return {"url": public_url, "duration": duration_ms}
+    return {"url": public_url, "duration_ms": duration_ms}
