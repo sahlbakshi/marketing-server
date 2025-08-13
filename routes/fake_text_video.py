@@ -7,13 +7,6 @@ from utils.audio import get_audio_duration_ms
 from utils.prompts import husband_wife_prompt
 import uuid
 
-"""
-EROR HANDLING
-RESPONSE MODEL FOR ENDPOINTS
-ASK GPT IF U CAN SIMPLIFY BASE MODELS OR NOT
-SEE HOW BUFFER WORKS EXACLT FOR ADUIO
-"""
-
 router = APIRouter(prefix="/fake-text-video")
 
 @router.get("/messages", response_model=MultilingualChatResponse)
