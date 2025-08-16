@@ -9,7 +9,7 @@ import uuid
 
 router = APIRouter(prefix="/fake-text-video")
 
-@router.get("/messages", response_model=MultilingualChatResponse)
+@router.get("/messages")
 def get_messages():
     chat = generate_chat(
         model='gpt-5-mini',
@@ -18,7 +18,7 @@ def get_messages():
     )
     return chat
 
-@router.post("/tts/batch", response_model=ChatResponse) 
+@router.post("/tts/batch")
 def post_tts_batch(request: ChatRequest):
     messages = request.messages
     sender_voice = request.voices.sender
@@ -34,7 +34,7 @@ def post_tts_batch(request: ChatRequest):
             model="gpt-4o-mini-tts",
             voice=voice,
             text=message.text,
-            instructions="Speak in the Najdi dialect",
+            instructions="Speak in a conversational Najdi arabic dialect",
         )
 
         public_url = upload_audio_bytes(
@@ -50,7 +50,7 @@ def post_tts_batch(request: ChatRequest):
     return response
     
 
-@router.post("/tts/single", response_model=LineResponse) 
+@router.post("/tts/single") 
 def post_tts_single(request: LineRequest):
     text = request.text
     voice = request.voice
@@ -61,7 +61,7 @@ def post_tts_single(request: LineRequest):
         model="gpt-4o-mini-tts",
         voice=voice,
         text=text,
-        instructions="Speak in the Najdi dialect",
+        instructions="Speak in a conversational Najdi arabic dialect",
     )
 
     public_url = upload_audio_bytes(

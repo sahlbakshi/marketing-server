@@ -1,6 +1,6 @@
 from io import BytesIO
 from config import openai
-from schema.chat import MultiLanguageMessages
+from schema.chat import MultilingualChatResponse
 
 def tts_to_bytes(*, model: str, voice: str, text: str, instructions: str | None = None) -> bytes:
     buf = BytesIO()
@@ -15,13 +15,13 @@ def tts_to_bytes(*, model: str, voice: str, text: str, instructions: str | None 
     return buf.getvalue()
 
 
-def generate_chat(*, model: str, prompt: str, schema: dict) -> MultiLanguageMessages:
+def generate_chat(*, model: str, prompt: str, schema: dict) -> MultilingualChatResponse:
     response = openai.responses.parse(
         model=model,
         input=[
             {"role": "system", "content": prompt}
         ],
-        text_format=schema,
+        text_format=schema
     )
     
     return response.output_parsed

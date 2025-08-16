@@ -30,7 +30,8 @@ class LineResponse(BaseModel):
 
 class MultilingualMessage(BaseModel):
     role: Character
-    text: dict[str, Text]
+    en: Text = Field(description="English text")
+    ar: Text = Field(description="Arabic text")
 
 class MultilingualChatResponse(BaseModel):
     messages: list[MultilingualMessage]
