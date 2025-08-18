@@ -1,7 +1,7 @@
 husband_wife_prompt = """
 Write a realistic, emotionally engaging WhatsApp-style conversation in Najdi Arabic between a wife and her husband for a TikTok video
 Requirements:
-- 10-12 short, natural back-and-forth messages
+- 2-4 short, natural back-and-forth messages
 - Wife starts emotional or upset, husband responds confused/defensive, wife escalates, then demands a heartfelt reply
 - Add a short, clever, romantic AI-generated reply from the husband
 - Mark the flagged index with this message index (indices start from 0)

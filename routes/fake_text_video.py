@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from config import AUDIO_CACHE_BUCKET
-from schema.chat import ChatRequest, LineRequest, MultilingualChat
+from schema.chat import ChatRequest, LineRequest, MultilingualChat, MessageAudio
 from services.supabase import upload_audio_bytes
 from services.openai import tts_to_bytes, generate_chat
 from utils.audio import get_audio_duration_ms
@@ -9,7 +9,7 @@ import uuid
 
 router = APIRouter(prefix="/fake-text-video")
 
-@router.get("/messages")
+@router.get("/messages", response_model=MultilingualChat)
 def get_messages():
     chat = generate_chat(
         model='gpt-5-mini',
@@ -18,7 +18,7 @@ def get_messages():
     )
     return chat
 
-@router.post("/tts/batch")
+@router.post("/tts/batch", response_model=list[MessageAudio])
 def post_tts_batch(request: ChatRequest):
     messages = request.messages
     sender_voice = request.sender_voice
@@ -45,12 +45,12 @@ def post_tts_batch(request: ChatRequest):
         )
 
         duration_ms = get_audio_duration_ms(audio_bytes)
-        response.append({"url": public_url, "duration_ms": duration_ms})
+        response.append(MessageAudio(url=public_url, duration_ms=duration_ms))
 
     return response
     
 
-@router.post("/tts/single") 
+@router.post("/tts/single", response_model=MessageAudio) 
 def post_tts_single(request: LineRequest):
     text = request.text
     voice = request.voice
@@ -73,4 +73,4 @@ def post_tts_single(request: LineRequest):
 
     duration_ms = get_audio_duration_ms(audio_bytes)
 
-    return {"url": public_url, "duration_ms": duration_ms}
+    return MessageAudio(url=public_url, duration_ms=duration_ms)

@@ -11,8 +11,8 @@ class Message(BaseModel):
 
 class ChatRequest(BaseModel):
     messages: list[Message]
-    sender_voice: Voice
-    receiver_voice: Voice
+    sender_voice: Voice = Field(alias="senderVoice")
+    receiver_voice: Voice = Field(alias="receiverVoice")
 
 class LineRequest(BaseModel):
     text: Text
@@ -25,4 +25,9 @@ class MultilingualMessage(BaseModel):
 
 class MultilingualChat(BaseModel):
     messages: list[MultilingualMessage]
-    highlight_index: int
+    highlight_index: int = Field(alias="highlightIndex")
+
+class MessageAudio(BaseModel):
+    url: str
+    duration_ms: int = Field(serialization_alias="durationMs")
+    
