@@ -10,5 +10,6 @@ Requirements:
 - Break multi-sentence messages into separate entries, even if they're from the same speaker
 - For example, the wife can send two separate chat bubbles, so there can be two consecutive entries from her.
 - Must feel like an authentic WhatsApp screenshot
-- Provide both English (text_en) and Arabic (text_ar) versions of each message
+- Provide both English (en) and Arabic (ar) versions of each message
+- The messages must start with the wife, and as the sender
 """
