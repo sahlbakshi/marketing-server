@@ -16,6 +16,7 @@ def tts_to_bytes(*, model: str, voice: str, text: str, instructions: str | None 
 
 
 def generate_chat(*, model: str, prompt: str, schema: dict) -> MultilingualChat:
+
     response = openai.responses.parse(
         model=model,
         input=[

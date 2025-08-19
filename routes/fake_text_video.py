@@ -10,11 +10,11 @@ import uuid
 router = APIRouter(prefix="/fake-text-video")
 
 @router.get("/messages", response_model=MultilingualChat)
-def get_messages():
+def get_messages(sentiment: str = "normal", num_messages: int = 8):
     chat = generate_chat(
         model='gpt-5-mini',
-        prompt=husband_wife_prompt,
-        schema=MultilingualChat,
+        prompt=husband_wife_prompt(sentiment, num_messages),
+        schema=MultilingualChat
     )
     return chat
 
