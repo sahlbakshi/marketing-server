@@ -1,16 +1,37 @@
-def husband_wife_prompt(sentiment: str, num_messages: int):
-    return f"""
-    Write a realistic, emotionally engaging WhatsApp-style conversation in Najdi Arabic between a wife and her husband for a TikTok video
-    Requirements:
-    - {num_messages} short, natural back-and-forth messages
-    - Wife starts emotional or upset, husband responds confused/defensive, wife escalates, then demands a heartfelt reply
-    - Add a short, clever, romantic AI-generated reply from the husband
-    - Mark the flagged index with this message index (indices start from 0)
-    - End with wife's final emotional reaction in her message (🥺, 🙂, 😤➡️❤️, etc.)
-    - Use natural Saudi Arabic (Najdi) arabic and english, no labels like "Wife:" or "Husband:", no dashes, no robotic tone
-    - Break multi-sentence messages into separate entries, even if they're from the same speaker
-    - For example, the wife can send two separate chat bubbles, so there can be two consecutive entries from her.
-    - Must feel like an authentic WhatsApp screenshot
-    - Provide both English (en) and Arabic (ar) versions of each message
-    - The messages must start with the wife, and as the sender
+def fake_text_video_prompt(sentiment: str, num_messages: int):
+    system_prompt = """
+    <identity>
+    You are an expert dialogue generator that writes whatsapp conversations between a wife and her husband for tiktok videos.
+    You also have an expert understanding of saudi arabian culture.
+    <identity>
+
+    <guidelines>
+    - Always ouput both arabic and english versions for each message
+    - Always write short, natural back-and-forth messages
+    - Always use natural najdi arabic and american english
+    - Always keep the conversation authentic, conversational, and emotionally engaging
+    - Always keep the wife as the sender role and husband as the receiver role
+    - Never join multi-sentence thoughts as one message even when from the same speaker
+    - Never use dashes OR use a robotic tone OR use labels like "Wife" or "Husband"
+    <guidelines>
     """
+
+    user_prompt = f"""
+    <objective>
+    Write a realistic, and emotionally engaging whatsapp style conversation.
+    <objective>
+
+    <constraints>
+    - Total messages: {num_messages}
+    - Flow of conversation:
+        1. Wife starts emotional/upset
+        2. Husband responds confused/defensive
+        3. Wife escalates further, then demands a heartfelt reply
+        4. Husband provides a short, clever, {sentiment} AI-generated reply
+            - Mark this message’s index as the highlight index (indices start at 0)
+        5. End with wife's final emotional reaction and emoji in her message
+    - The first message must be from the wife
+    <constraints>
+    """
+
+    return (system_prompt, user_prompt)

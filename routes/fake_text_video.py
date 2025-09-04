@@ -4,7 +4,7 @@ from schema.chat import ChatRequest, LineRequest, MultilingualChat, MessageAudio
 from services.supabase import upload_audio_bytes
 from services.openai import tts_to_bytes, generate_chat
 from utils.audio import get_audio_duration_ms
-from utils.prompts import husband_wife_prompt
+from utils.prompts import fake_text_video_prompt
 import uuid
 
 router = APIRouter(prefix="/fake-text-video")
@@ -13,7 +13,7 @@ router = APIRouter(prefix="/fake-text-video")
 def get_messages(sentiment: str = "normal", num_messages: int = 8):
     chat = generate_chat(
         model='gpt-4.1',
-        prompt=husband_wife_prompt(sentiment, num_messages),
+        prompts=fake_text_video_prompt(sentiment, num_messages),
         schema=MultilingualChat
     )
     return chat

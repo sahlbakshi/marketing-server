@@ -15,14 +15,17 @@ def tts_to_bytes(*, model: str, voice: str, text: str, instructions: str | None 
     return buf.getvalue()
 
 
-def generate_chat(*, model: str, prompt: str, schema: dict) -> MultilingualChat:
+def generate_chat(*, model: str, prompts: tuple[str, str], schema: dict) -> MultilingualChat:
+    system_prompt, user_prompt = prompts
 
     response = openai.responses.parse(
         model=model,
         input=[
-            {"role": "system", "content": prompt}
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt},
         ],
-        text_format=schema
+        text_format=schema,
+        temperature=1.2
     )
     
     return response.output_parsed
