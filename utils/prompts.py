@@ -1,6 +1,8 @@
 from textwrap import dedent
 
 def fake_text_video_prompt(sentiment: str, num_messages: int):
+    print(num_messages)
+    
     system_prompt = dedent("""
     <identity>
     You are an expert dialogue generator for viral TikTok stories.
@@ -64,7 +66,7 @@ def fake_text_video_prompt(sentiment: str, num_messages: int):
 
     user_prompt = dedent("""
     <objective>
-    Write a fresh, realistic, emotional WhatsApp-style conversation.
+    Write a fresh, realistic, emotional WhatsApp-style conversation with {num_messages} messages between wife and husband.
     <objective>
 
     <content>
@@ -89,7 +91,6 @@ def fake_text_video_prompt(sentiment: str, num_messages: int):
     <content>
 
     <constraints>
-    - Total messages: {num_messages}
     - The Hubb AI reply must NEVER follow a husband message.
     - First message must always be from wife.
     - Escalation must feel natural, not formulaic.
