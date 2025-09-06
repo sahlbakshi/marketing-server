@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from config import AUDIO_CACHE_BUCKET
-from schema.chat import ChatRequest, LineRequest, MultilingualChat, MessageAudio
+from schema.chat import ChatRequest, LineRequest, MultilingualChat, MessageAudio, MessageRequest
 from services.supabase import upload_audio_bytes
 from services.openai import tts_to_bytes, generate_chat
 from utils.audio import get_audio_duration_ms
@@ -9,20 +9,20 @@ import uuid
 
 router = APIRouter(prefix="/fake-text-video")
 
-@router.get("/messages", response_model=MultilingualChat)
-def get_messages(sentiment: str = "normal", num_messages: int = 10):
+@router.post("/messages")
+def get_messages(req: MessageRequest):
     chat = generate_chat(
-        model='gpt-4.1',
-        prompts=fake_text_video_prompt(sentiment, num_messages),
+        model="gpt-4.1",
+        prompts=(req.system_prompt, req.user_prompt),
         schema=MultilingualChat
     )
     return chat
 
 @router.post("/tts/batch", response_model=list[MessageAudio])
-def post_tts_batch(request: ChatRequest):
-    messages = request.messages
-    sender_voice = request.sender_voice
-    receiver_voice = request.receiver_voice
+def post_tts_batch(req: ChatRequest):
+    messages = req.messages
+    sender_voice = req.sender_voice
+    receiver_voice = req.receiver_voice
 
     folder = uuid.uuid4().hex
 
@@ -51,9 +51,9 @@ def post_tts_batch(request: ChatRequest):
     
 
 @router.post("/tts/single", response_model=MessageAudio) 
-def post_tts_single(request: LineRequest):
-    text = request.text
-    voice = request.voice
+def post_tts_single(req: LineRequest):
+    text = req.text
+    voice = req.voice
 
     folder = uuid.uuid4().hex
 

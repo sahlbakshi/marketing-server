@@ -30,4 +30,10 @@ class MultilingualChat(BaseModel):
 class MessageAudio(BaseModel):
     url: str
     duration_ms: int = Field(serialization_alias="durationMs")
+
+class MessageRequest(BaseModel):
+    sentiment: str
+    num_messages: int = Field(alias="numMessages")
+    user_prompt: str = Field(alias="userPrompt")
+    system_prompt: str = Field(alias="systemPrompt")
     
